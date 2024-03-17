@@ -49,15 +49,17 @@ public class RootController {
     public String doPostScramble(
             @ModelAttribute(name = "form") ScrambleForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#scramble()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
+        if (bindingResult.hasErrors()) {
+            // Handle validation errors
+            return "errorPage"; // Return error page
+        }
+        String inputText = form.getWord();
+        form.setScramble(jumbleEngine.scramble(inputText));
 
-        return "scramble";
+
+        model.addAttribute("form", form);
+
+        return "scramble"; // Return the name of the view page for displaying the result
     }
 
     @GetMapping("palindrome")
