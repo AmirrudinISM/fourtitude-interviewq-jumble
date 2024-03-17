@@ -1,197 +1,271 @@
 package asia.fourtitude.interviewq.jumble.core;
 
-import java.io.*;
+import asia.fourtitude.interviewq.jumble.WordListSingleton;
+import asia.fourtitude.interviewq.jumble.WordUtils;
+
 import java.util.*;
 
 public class JumbleEngine {
+    ArrayList<String> words = WordListSingleton.getInstance().getWordList();
 
-    /**
-     * From the input `word`, produces/generates a copy which has the same
-     * letters, but in different ordering.
-     *
-     * Example: from "elephant" to "aeehlnpt".
-     *
-     * Evaluation/Grading:
-     * a) pass unit test: JumbleEngineTest#scramble()
-     * b) scrambled letters/output must not be the same as input
-     *
-     * @param word  The input word to scramble the letters.
-     * @return  The scrambled output/letters.
-     */
     public String scramble(String word) {
         /*
          * Refer to the method's Javadoc (above) and implement accordingly.
          * Must pass the corresponding unit tests.
          */
-        throw new UnsupportedOperationException("to be implemented");
+        List<Character> letters = new ArrayList<>();
+        for (char c : word.toCharArray()) {
+            letters.add(c);
+        }
+        Collections.shuffle(letters);
+
+        StringBuilder scrambled = new StringBuilder();
+        for (char c : letters) {
+            scrambled.append(c);
+        }
+
+        // Ensure the scrambled output is different from the input
+        if (scrambled.toString().equals(word)) {
+            return scramble(word); // Retry scrambling
+        }
+
+        return scrambled.toString();
     }
 
-    /**
-     * Retrieves the palindrome words from the internal
-     * word list/dictionary ("src/main/resources/words.txt").
-     *
-     * Word of single letter is not considered as valid palindrome word.
-     *
-     * Examples: "eye", "deed", "level".
-     *
-     * Evaluation/Grading:
-     * a) able to access/use resource from classpath
-     * b) using inbuilt Collections
-     * c) using "try-with-resources" functionality/statement
-     * d) pass unit test: JumbleEngineTest#palindrome()
-     *
-     * @return  The list of palindrome words found in system/engine.
-     * @see https://www.google.com/search?q=palindrome+meaning
-     */
     public Collection<String> retrievePalindromeWords() {
         /*
          * Refer to the method's Javadoc (above) and implement accordingly.
          * Must pass the corresponding unit tests.
          */
-        throw new UnsupportedOperationException("to be implemented");
+
+
+        //add palindromes
+        List<String> palindromeWords = new ArrayList<>();
+
+        for (String word : this.words) {
+            boolean isPalindrome = false;
+            if (word.length() > 1) {
+                int left = 0;
+                int right = word.length() - 1;
+                isPalindrome = true;
+
+                while (left < right) {
+                    if (word.charAt(left) != word.charAt(right)) {
+                        isPalindrome = false;
+                        break; // Exit the while loop if a mismatch is found
+                    }
+                    left++;
+                    right--;
+                }
+            }
+
+            if (isPalindrome) {
+                palindromeWords.add(word);
+            }
+        }
+
+        return palindromeWords;
+
     }
 
-    /**
-     * Picks one word randomly from internal word list.
-     *
-     * Evaluation/Grading:
-     * a) pass unit test: JumbleEngineTest#randomWord()
-     * b) provide a good enough implementation, if not able to provide a fast lookup
-     * c) bonus points, if able to implement a fast lookup/scheme
-     *
-     * @param length  The word picked, must of length.
-     * @return  One of the word (randomly) from word list.
-     *          Or null if none matching.
-     */
     public String pickOneRandomWord(Integer length) {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
-        throw new UnsupportedOperationException("to be implemented");
+
+        List<String> matchingWords = new ArrayList<>();
+
+        Random random = new Random();
+        int randomIndex = 0;
+
+        if (length == null || length <= 0) {
+            randomIndex = Math.abs(random.nextInt() % this.words.size());
+            return this.words.get(randomIndex); // Invalid input, return null
+        }
+
+
+
+        for (String word : this.words) {
+            if (word.length() == length) {
+                matchingWords.add(word);
+            }
+        }
+
+        if (matchingWords.isEmpty()) {
+            return null; // No matching word found
+        }
+
+
+        return matchingWords.get(randomIndex);
     }
 
-    /**
-     * Checks if the `word` exists in internal word list.
-     * Matching is case insensitive.
-     *
-     * Evaluation/Grading:
-     * a) pass related unit tests in "JumbleEngineTest"
-     * b) provide a good enough implementation, if not able to provide a fast lookup
-     * c) bonus points, if able to implement a fast lookup/scheme
-     *
-     * @param word  The input word to check.
-     * @return  true if `word` exists in internal word list.
-     */
     public boolean exists(String word) {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
-        throw new UnsupportedOperationException("to be implemented");
+        if (word == null) {
+            return false; // Input is null, return false
+        }
+
+        String lowercaseWord = word.toLowerCase(); // Convert the word to lowercase for case-insensitive comparison
+
+        for (String w : this.words) {
+            if (w.equalsIgnoreCase(lowercaseWord)) {
+                return true; // Found a match
+            }
+        }
+
+        return false; // No match found
     }
 
-    /**
-     * Finds all the words from internal word list which begins with the
-     * input `prefix`.
-     * Matching is case insensitive.
-     *
-     * Invalid `prefix` (null, empty string, blank string, non letter) will
-     * return empty list.
-     *
-     * Evaluation/Grading:
-     * a) pass related unit tests in "JumbleEngineTest"
-     * b) provide a good enough implementation, if not able to provide a fast lookup
-     * c) bonus points, if able to implement a fast lookup/scheme
-     *
-     * @param prefix  The prefix to match.
-     * @return  The list of words matching the prefix.
-     */
     public Collection<String> wordsMatchingPrefix(String prefix) {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
-        throw new UnsupportedOperationException("to be implemented");
+        List<String> matchingWords = new ArrayList<>();
+
+        // Validate the prefix
+        if (prefix == null || prefix.trim().isEmpty() || !prefix.matches("[a-zA-Z]+")) {
+            return matchingWords; // Return an empty list for invalid prefix
+        }
+
+        String lowercasePrefix = prefix.toLowerCase(); // Convert the prefix to lowercase for case-insensitive comparison
+
+        for (String word : this.words) {
+            if (word.toLowerCase().startsWith(lowercasePrefix)) {
+                matchingWords.add(word); // Add words that start with the prefix to the matchingWords list
+            }
+        }
+
+        return matchingWords;
     }
 
-    /**
-     * Finds all the words from internal word list that is matching
-     * the searching criteria.
-     *
-     * `startChar` and `endChar` must be 'a' to 'z' only. And case insensitive.
-     * `length`, if have value, must be positive integer (>= 1).
-     *
-     * Words are filtered using `startChar` and `endChar` first.
-     * Then apply `length` on the result, to produce the final output.
-     *
-     * Must have at least one valid value out of 3 inputs
-     * (`startChar`, `endChar`, `length`) to proceed with searching.
-     * Otherwise, return empty list.
-     *
-     * Evaluation/Grading:
-     * a) pass related unit tests in "JumbleEngineTest"
-     * b) provide a good enough implementation, if not able to provide a fast lookup
-     * c) bonus points, if able to implement a fast lookup/scheme
-     *
-     * @param startChar  The first character of the word to search for.
-     * @param endChar    The last character of the word to match with.
-     * @param length     The length of the word to match.
-     * @return  The list of words matching the searching criteria.
-     */
     public Collection<String> searchWords(Character startChar, Character endChar, Integer length) {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
-        throw new UnsupportedOperationException("to be implemented");
+        List<String> matchingWords = new ArrayList<>();
+
+        // Validate the input parameters
+        boolean validStartChar = startChar != null && Character.isLetter(startChar);
+        boolean validEndChar = endChar != null && Character.isLetter(endChar);
+        boolean validLength = length != null && length > 0;
+
+        boolean sameStartChar = false;
+        boolean sameEndChar = false;
+        boolean sameLength = false;
+
+        for(String word: this.words){
+            if(validLength){
+                sameLength = word.length() == length;
+
+                if (validStartChar && validEndChar ){
+                    sameStartChar = Character.toLowerCase(word.charAt(0)) == Character.toLowerCase(startChar);
+                    sameEndChar = Character.toLowerCase(word.charAt(word.length() - 1)) == Character.toLowerCase(endChar);
+                    if(sameStartChar && sameEndChar && sameLength){
+                        matchingWords.add(word);
+                    }
+                }
+                else if (validStartChar){
+                    sameStartChar = Character.toLowerCase(word.charAt(0)) == Character.toLowerCase(startChar);
+                    if(sameStartChar && sameLength){
+                        matchingWords.add(word);
+                    }
+                }
+                else if(validEndChar){
+                    sameEndChar = Character.toLowerCase(word.charAt(word.length() - 1)) == Character.toLowerCase(endChar);
+                    if(sameEndChar && sameLength){
+                        matchingWords.add(word);
+                    }
+                }
+                else{
+                    if(sameLength){
+                        matchingWords.add(word);
+                    }
+                }
+            }
+
+            else if(validStartChar){
+                sameStartChar = Character.toLowerCase(word.charAt(0)) == Character.toLowerCase(startChar);
+
+                if(validEndChar && validLength){
+                    sameEndChar = Character.toLowerCase(word.charAt(word.length() - 1)) == Character.toLowerCase(endChar);
+                    sameLength = word.length() == length;
+                    if(sameEndChar && sameStartChar && sameLength ){
+                        matchingWords.add(word);
+                    }
+                }
+                else if(validEndChar){
+                    sameEndChar = Character.toLowerCase(word.charAt(word.length() - 1)) == Character.toLowerCase(endChar);
+                    if(sameEndChar && sameStartChar){
+                        matchingWords.add(word);
+                    }
+                }
+                else if(validLength){
+                    sameLength = word.length() == length;
+                    if(sameLength && sameStartChar){
+                        matchingWords.add(word);
+                    }
+                }
+                else {
+                    if (sameStartChar){
+                        matchingWords.add(word);
+                    }
+                }
+            }
+
+            else if(validEndChar){
+                sameEndChar = Character.toLowerCase(word.charAt(word.length() - 1)) == Character.toLowerCase(endChar);
+
+                if(validStartChar && validLength){
+                    sameStartChar = Character.toLowerCase(word.charAt(0)) == Character.toLowerCase(startChar);
+                    sameLength = word.length() == length;
+                    if(sameEndChar && sameStartChar && sameLength ){
+                        matchingWords.add(word);
+                    }
+                }
+                else if(validStartChar){
+                    sameStartChar = Character.toLowerCase(word.charAt(0)) == Character.toLowerCase(startChar);
+                    if(sameEndChar && sameStartChar){
+                        matchingWords.add(word);
+                    }
+                }
+                else if(validLength){
+                    sameLength = word.length() == length;
+                    if(sameLength && sameEndChar){
+                        matchingWords.add(word);
+                    }
+                }
+                else {
+                    if (sameEndChar){
+                        matchingWords.add(word);
+                    }
+                }
+            }
+        }
+
+        return matchingWords;
     }
 
-    /**
-     * Generates all possible combinations of smaller/sub words using the
-     * letters from input word.
-     *
-     * The `minLength` set the minimum length of sub word that is considered
-     * as acceptable word.
-     *
-     * If length of input `word` is less than `minLength`, then return empty list.
-     *
-     * Example: From "yellow" and `minLength` = 3, the output sub words:
-     *     low, lowly, lye, ole, owe, owl, well, welly, woe, yell, yeow, yew, yowl
-     *
-     * Evaluation/Grading:
-     * a) pass related unit tests in "JumbleEngineTest"
-     * b) provide a good enough implementation, if not able to provide a fast lookup
-     * c) bonus points, if able to implement a fast lookup/scheme
-     *
-     * @param word       The input word to use as base/seed.
-     * @param minLength  The minimum length (inclusive) of sub words.
-     *                   Expects positive integer.
-     *                   Default is 3.
-     * @return  The list of sub words constructed from input `word`.
-     */
     public Collection<String> generateSubWords(String word, Integer minLength) {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
-        throw new UnsupportedOperationException("to be implemented");
+        Set<String> matchingSubstrings = new HashSet<>();
+        Set<String> wordSet = new HashSet<>(this.words);
+
+        // Check if both word and minLength are null
+        if (word == null && minLength == null) {
+            return matchingSubstrings;
+        }
+
+        minLength = minLength != null ? minLength : 3;
+
+        for (int subLength = minLength; subLength <= Objects.requireNonNull(word).length(); subLength++) {
+            for (int i = 0; i <= word.length() - subLength; i++) {
+                String currentSubstring = word.substring(i, i + subLength);
+                Set<String> combinations = WordUtils.allCharCombinations(currentSubstring);
+
+                for (String combination : combinations) {
+                    Set<String> permutations = WordUtils.generatePermutations(combination);
+
+                    for (String permutation : permutations) {
+                        if (wordSet.contains(permutation) && permutation.length() >= minLength) {
+                            matchingSubstrings.add(permutation);
+                        }
+                    }
+                }
+            }
+        }
+
+        return matchingSubstrings;
     }
 
-    /**
-     * Creates a game state with word to guess, scrambled letters, and
-     * possible combinations of words.
-     *
-     * Word is of length 6 characters.
-     * The minimum length of sub words is of length 3 characters.
-     *
-     * @param length     The length of selected word.
-     *                   Expects >= 3.
-     * @param minLength  The minimum length (inclusive) of sub words.
-     *                   Expects positive integer.
-     *                   Default is 3.
-     * @return  The game state.
-     */
     public GameState createGameState(Integer length, Integer minLength) {
         Objects.requireNonNull(length, "length must not be null");
         if (minLength == null) {
