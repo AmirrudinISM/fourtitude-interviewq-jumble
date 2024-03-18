@@ -9,10 +9,6 @@ public class JumbleEngine {
     ArrayList<String> words = WordListSingleton.getInstance().getWordList();
 
     public String scramble(String word) {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
         List<Character> letters = new ArrayList<>();
         for (char c : word.toCharArray()) {
             letters.add(c);
@@ -26,20 +22,15 @@ public class JumbleEngine {
 
         // Ensure the scrambled output is different from the input
         if (scrambled.toString().equals(word)) {
-            return scramble(word); // Retry scrambling
+            // Retry scrambling
+            return scramble(word);
         }
 
         return scrambled.toString();
     }
 
     public Collection<String> retrievePalindromeWords() {
-        /*
-         * Refer to the method's Javadoc (above) and implement accordingly.
-         * Must pass the corresponding unit tests.
-         */
 
-
-        //add palindromes
         List<String> palindromeWords = new ArrayList<>();
 
         for (String word : this.words) {
@@ -52,7 +43,8 @@ public class JumbleEngine {
                 while (left < right) {
                     if (word.charAt(left) != word.charAt(right)) {
                         isPalindrome = false;
-                        break; // Exit the while loop if a mismatch is found
+                        // Exit the while loop if a mismatch is found
+                        break;
                     }
                     left++;
                     right--;
@@ -77,10 +69,9 @@ public class JumbleEngine {
 
         if (length == null || length <= 0) {
             randomIndex = Math.abs(random.nextInt() % this.words.size());
-            return this.words.get(randomIndex); // Invalid input, return null
+            // Invalid input, return null
+            return this.words.get(randomIndex);
         }
-
-
 
         for (String word : this.words) {
             if (word.length() == length) {
@@ -89,27 +80,31 @@ public class JumbleEngine {
         }
 
         if (matchingWords.isEmpty()) {
-            return null; // No matching word found
+            // No matching word found
+            return null;
         }
-
 
         return matchingWords.get(randomIndex);
     }
 
     public boolean exists(String word) {
         if (word == null) {
-            return false; // Input is null, return false
+            // Input is null, return false
+            return false;
         }
 
-        String lowercaseWord = word.toLowerCase(); // Convert the word to lowercase for case-insensitive comparison
+        // Convert the word to lowercase for case-insensitive comparison
+        String lowercaseWord = word.toLowerCase();
 
         for (String w : this.words) {
             if (w.equalsIgnoreCase(lowercaseWord)) {
-                return true; // Found a match
+                // Found a match
+                return true;
             }
         }
 
-        return false; // No match found
+        // No match found
+        return false;
     }
 
     public Collection<String> wordsMatchingPrefix(String prefix) {
@@ -117,14 +112,17 @@ public class JumbleEngine {
 
         // Validate the prefix
         if (prefix == null || prefix.trim().isEmpty() || !prefix.matches("[a-zA-Z]+")) {
-            return matchingWords; // Return an empty list for invalid prefix
+            // Return an empty list for invalid prefix
+            return matchingWords;
         }
 
-        String lowercasePrefix = prefix.toLowerCase(); // Convert the prefix to lowercase for case-insensitive comparison
+        // Convert the prefix to lowercase for case-insensitive comparison
+        String lowercasePrefix = prefix.toLowerCase();
 
         for (String word : this.words) {
             if (word.toLowerCase().startsWith(lowercasePrefix)) {
-                matchingWords.add(word); // Add words that start with the prefix to the matchingWords list
+                // Add words that start with the prefix to the matchingWords list
+                matchingWords.add(word);
             }
         }
 

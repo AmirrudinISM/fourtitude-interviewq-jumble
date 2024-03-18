@@ -20,6 +20,8 @@ import asia.fourtitude.interviewq.jumble.model.ScrambleForm;
 import asia.fourtitude.interviewq.jumble.model.SearchForm;
 import asia.fourtitude.interviewq.jumble.model.SubWordsForm;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping(path = "/")
 public class RootController {
@@ -47,17 +49,15 @@ public class RootController {
 
     @PostMapping("scramble")
     public String doPostScramble(
-            @ModelAttribute(name = "form") ScrambleForm form,
+            @ModelAttribute(name = "form")@Valid ScrambleForm form,
             BindingResult bindingResult, Model model) {
+
         if (bindingResult.hasErrors()) {
-            // Handle validation errors
-            return "errorPage"; // Return error page
+            return "scramble";
         }
+
         String inputText = form.getWord();
         form.setScramble(jumbleEngine.scramble(inputText));
-
-
-        model.addAttribute("form", form);
 
         return "scramble"; // Return the name of the view page for displaying the result
     }
