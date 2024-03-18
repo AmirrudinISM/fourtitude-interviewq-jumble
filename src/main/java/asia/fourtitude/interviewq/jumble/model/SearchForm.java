@@ -2,13 +2,16 @@ package asia.fourtitude.interviewq.jumble.model;
 
 import java.util.Collection;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class SearchForm {
 
+    @NotBlank
     @Size(min = 0, max = 1)
     private String startChar;
 
+    @NotBlank
     @Size(min = 0, max = 1)
     private String endChar;
 

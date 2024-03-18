@@ -76,7 +76,7 @@ public class RootController {
 
     @PostMapping("exists")
     public String doPostExists(
-            @ModelAttribute(name = "form") ExistsForm form,
+            @ModelAttribute(name = "form") @Valid ExistsForm form,
             BindingResult bindingResult, Model model) {
         /*
          * TODO:
@@ -85,6 +85,14 @@ public class RootController {
          * c) Presentation page to show the result
          * d) Must pass the corresponding unit tests
          */
+
+
+        if (bindingResult.hasErrors()) {
+            return "exists";
+        }
+
+        String inputText = form.getWord();
+        form.setExists(jumbleEngine.exists(inputText));
 
         return "exists";
     }
@@ -97,7 +105,7 @@ public class RootController {
 
     @PostMapping("prefix")
     public String doPostPrefix(
-            @ModelAttribute(name = "form") PrefixForm form,
+            @ModelAttribute(name = "form") @Valid PrefixForm form,
             BindingResult bindingResult, Model model) {
         /*
          * TODO:
@@ -106,8 +114,15 @@ public class RootController {
          * c) Presentation page to show the result
          * d) Must pass the corresponding unit tests
          */
+        if (bindingResult.hasErrors()) {
+            return "prefix";
+        }
+
+        String inputText = form.getPrefix();
+        form.setWords(jumbleEngine.wordsMatchingPrefix(inputText));
 
         return "prefix";
+
     }
 
     @GetMapping("search")
@@ -118,7 +133,7 @@ public class RootController {
 
     @PostMapping("search")
     public String doPostSearch(
-            @ModelAttribute(name = "form") SearchForm form,
+            @ModelAttribute(name = "form") @Valid SearchForm form,
             BindingResult bindingResult, Model model) {
         /*
          * TODO:
@@ -128,6 +143,16 @@ public class RootController {
          * d) Presentation page to show the result
          * e) Must pass the corresponding unit tests
          */
+        if (bindingResult.hasErrors()) {
+            return "search";
+        }
+
+        String startChar = form.getStartChar();
+        String endChar = form.getEndChar();
+        int wordLength = form.getLength();
+
+        form.setWords(jumbleEngine.searchWords(startChar.charAt(0), endChar.charAt(0), wordLength));
+
 
         return "search";
     }
