@@ -59,7 +59,7 @@ public class RootController {
         String inputText = form.getWord();
         form.setScramble(jumbleEngine.scramble(inputText));
 
-        return "scramble"; // Return the name of the view page for displaying the result
+        return "scramble";
     }
 
     @GetMapping("palindrome")
@@ -78,14 +78,6 @@ public class RootController {
     public String doPostExists(
             @ModelAttribute(name = "form") @Valid ExistsForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#exists()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
-
 
         if (bindingResult.hasErrors()) {
             return "exists";
@@ -107,13 +99,7 @@ public class RootController {
     public String doPostPrefix(
             @ModelAttribute(name = "form") @Valid PrefixForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#wordsMatchingPrefix()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
+
         if (bindingResult.hasErrors()) {
             return "prefix";
         }
@@ -135,14 +121,7 @@ public class RootController {
     public String doPostSearch(
             @ModelAttribute(name = "form") @Valid SearchForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) Show the fields error accordingly: "Invalid startChar", "Invalid endChar", "Invalid length".
-         * c) To call JumbleEngine#searchWords()
-         * d) Presentation page to show the result
-         * e) Must pass the corresponding unit tests
-         */
+
         if (bindingResult.hasErrors()) {
             return "search";
         }
@@ -167,13 +146,6 @@ public class RootController {
     public String doPostSubWords(
             @ModelAttribute(name = "form") @Valid SubWordsForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#generateSubWords()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
 
         if (bindingResult.hasErrors()) {
             return "subWords";
