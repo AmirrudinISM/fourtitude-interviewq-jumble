@@ -17,6 +17,9 @@ import asia.fourtitude.interviewq.jumble.core.GameState;
 import asia.fourtitude.interviewq.jumble.core.JumbleEngine;
 import asia.fourtitude.interviewq.jumble.model.GameBoard;
 
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping(path = "/game")
 @SessionAttributes("board")
@@ -64,16 +67,11 @@ public class GameWebController {
     }
 
     @GetMapping("/new")
-    public String doGetNew(@ModelAttribute(name = "board") GameBoard board) {
-        GameState state = this.jumbleEngine.createGameState(6, 3);
+    public String doGetNew(@ModelAttribute(name = "board") GameBoard board, HttpSession session) {
 
-        /*
-         * TODO:
-         * a) Assign the created game `state` (with randomly picked word) into
-         *        game `board` (session attribute)
-         * b) Presentation page to show the information of game board/state
-         * c) Must pass the corresponding unit tests
-         */
+        GameState state = this.jumbleEngine.createGameState(6, 3);
+        board.setState(state);
+        session.setAttribute("state", state);
 
         return "game/board";
     }
@@ -87,10 +85,14 @@ public class GameWebController {
 
     @PostMapping("/play")
     public String doPostPlay(
-            @ModelAttribute(name = "board") GameBoard board,
-            BindingResult bindingResult, Model model) {
+            @ModelAttribute(name = "board") @Valid GameBoard board,
+            BindingResult bindingResult, Model model, HttpSession session) {
         if (board == null || board.getState() == null) {
             // session expired
+            return "game/board";
+        }
+
+        if (bindingResult.hasErrors()) {
             return "game/board";
         }
 
@@ -106,6 +108,17 @@ public class GameWebController {
          * f) Must pass the corresponding unit tests
          */
 
+        String guessInput = board.getWord();
+        GameState state = (GameState) session.getAttribute("state");
+
+        for(int i = 0; i < state.getSubWords().size(); i++){
+
+            if(guessInput.equals(state.getGuessedWords().get(i))){
+                state.updateGuessWord(guessInput);
+            }
+
+        }
+        session.setAttribute("state", state);
         return "game/board";
     }
 

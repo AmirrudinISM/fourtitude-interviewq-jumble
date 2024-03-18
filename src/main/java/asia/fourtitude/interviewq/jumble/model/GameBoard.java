@@ -2,10 +2,12 @@ package asia.fourtitude.interviewq.jumble.model;
 
 import asia.fourtitude.interviewq.jumble.core.GameState;
 
+import javax.validation.constraints.NotBlank;
+
 public class GameBoard {
 
     private GameState state;
-
+    @NotBlank
     private String word;
 
     public GameState getState() {
@@ -15,6 +17,7 @@ public class GameBoard {
     public void setState(GameState state) {
         this.state = state;
     }
+
 
     public String getWord() {
         return word;
