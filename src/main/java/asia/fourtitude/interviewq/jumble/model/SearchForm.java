@@ -3,19 +3,24 @@ package asia.fourtitude.interviewq.jumble.model;
 import java.util.Collection;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class SearchForm {
 
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid starChar")
     @Size(min = 0, max = 1)
     private String startChar;
 
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid endChar")
     @Size(min = 0, max = 1)
     private String endChar;
 
-    @javax.validation.constraints.Positive
+
+    @javax.validation.constraints.Positive(message = "Invalid length")
     private Integer length;
 
     private Collection<String> words;

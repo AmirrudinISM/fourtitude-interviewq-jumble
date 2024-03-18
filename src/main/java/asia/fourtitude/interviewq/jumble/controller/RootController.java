@@ -149,7 +149,7 @@ public class RootController {
 
         String startChar = form.getStartChar();
         String endChar = form.getEndChar();
-        int wordLength = form.getLength();
+        Integer wordLength = form.getLength();
 
         form.setWords(jumbleEngine.searchWords(startChar.charAt(0), endChar.charAt(0), wordLength));
 
@@ -165,7 +165,7 @@ public class RootController {
 
     @PostMapping("subWords")
     public String doPostSubWords(
-            @ModelAttribute(name = "form") SubWordsForm form,
+            @ModelAttribute(name = "form") @Valid SubWordsForm form,
             BindingResult bindingResult, Model model) {
         /*
          * TODO:
@@ -174,6 +174,16 @@ public class RootController {
          * c) Presentation page to show the result
          * d) Must pass the corresponding unit tests
          */
+
+        if (bindingResult.hasErrors()) {
+            return "subWords";
+        }
+
+        String word = form.getWord();
+        int wordLength = form.getMinLength();
+
+        form.setWords(jumbleEngine.generateSubWords(word,wordLength));
+
 
         return "subWords";
     }
